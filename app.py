@@ -7,6 +7,7 @@ import os
 from forms import RegisterForm, LoginForm
 from functools import wraps
 from flask import current_app
+from waitress import serve
 # ================================= APP CONFIG =================================
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
@@ -453,4 +454,4 @@ def add_review(product_id):
 
 # ================================= RUN APP ====================================
 if __name__ == "__main__":
-    app.run(debug=True)
+    serve(app, host="0.0.0.0", port=5000)
