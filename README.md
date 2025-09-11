@@ -1,94 +1,163 @@
-🛍️ E-Commerce Flask App – Setup & Usage Guide
-Welcome to the E-Commerce Flask App! This guide will walk you through setting up the project, running it locally, and using both admin and user functionalities without conflicts.
+# 🛍️ E-Commerce Flask App – Setup & Usage Guide
 
-⚙️ Setup Instructions
-1. Enable Script Permissions (Windows Only)
-If you're on Windows and using PowerShell, run this command to allow virtual environment activation:
+Welcome to the **E-Commerce Flask App**! This guide will walk you through setting up the project, running it locally, and using both admin and user functionalities without conflicts.
 
-powershell
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
-2. Create Virtual Environment
-bash
+## ⚙️ Setup Instructions
+
+### 1. Enable Script Permissions (Windows Only)
+
+If you're on **Windows** and using **PowerShell**, run this command to allow virtual environment activation:
+
+```bash
+powershell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+### 2. Create Virtual Environment
+
+Next, create a virtual environment:
+
+```bash
 python -m venv venv
-Activate it:
+```
 
-Windows: venv\Scripts\activate
+Activate the virtual environment:
 
-Mac/Linux: source venv/bin/activate
+* **Windows**:
 
-3. Install Dependencies
-Make sure you're in the project root directory, then run:
+  ```bash
+  venv\Scripts\activate
+  ```
 
-bash
+* **Mac/Linux**:
+
+  ```bash
+  source venv/bin/activate
+  ```
+
+### 3. Install Dependencies
+
+Ensure you're in the project root directory, then run the following to install all required dependencies:
+
+```bash
 pip install -r requirements.txt
-4. Run the Application
-bash
+```
+
+### 4. Run the Application
+
+To start the Flask application locally, run:
+
+```bash
 python app.py
-The app will start on http://localhost:5000.
+```
 
-👨‍💼 Admin Usage Flow
-Access Admin Dashboard
+The app will be accessible at `http://localhost:5000`.
 
-Visit: http://localhost:5000/dashboard
+---
 
-Log in with admin credentials
+## 👨‍💼 Admin Usage Flow
 
-Add Products
+### 1. Access Admin Dashboard
 
-Use the dashboard interface to add product details and images
+Visit the **Admin Dashboard** by navigating to:
 
-Logout Immediately After Admin Tasks
+```
+http://localhost:5000/dashboard
+```
 
-Always log out after admin actions to prevent session conflicts with user flows
+### 2. Log in with Admin Credentials
 
-👤 User Usage Flow
-Register a New User
+Log in with your admin credentials.
 
-Visit: /register
+### 3. Add Products
 
-Fill in valid username, email, and password
+Use the **Admin Dashboard** interface to add product details and upload images.
 
-Log In as User
+### 4. Logout Immediately After Admin Tasks
 
-Visit: /login
+For security and to prevent session conflicts with user flows, **always log out** after performing admin tasks.
 
-Access user features like:
+---
 
-View products
+## 👤 User Usage Flow
 
-Add to cart
+### 1. Register a New User
 
-Checkout
+Visit the registration page at:
 
-Submit reviews
+```
+/register
+```
 
-Check Updated Products
+Fill in your **username**, **email**, and **password** to create an account.
 
-Newly added products by admin will appear in the user interface
+### 2. Log In as a User
 
-🚨 Important Notes
-Admin and User roles must remain isolated
+Visit the login page at:
 
-Admin should always log out before switching to user mode
+```
+/login
+```
 
-Avoid accessing user routes while logged in as admin
+### 3. User Features
 
-Session Conflicts
+After logging in as a user, you can access features like:
 
-If admin accesses user routes without logging out, it may cause cart/order issues
+* **View products**
+* **Add items to cart**
+* **Checkout**
+* **Submit product reviews**
+* **Check updated products** (Newly added products by admin will appear in the user interface)
 
-Role-Based Access
+---
 
-Admins should only use /dashboard and related management routes
+## 🚨 Important Notes
 
-Users should only interact with /cart, /checkout, /orders, etc.
+### 1. Admin and User Roles Must Remain Isolated
 
-📦 Dependencies
-Flask==3.0.0
-Flask-Login==0.6.3
-Flask-WTF==1.2.1
-Flask-SQLAlchemy==3.1.1
-WTForms==3.1.1
-email-validator==2.0.0.post2
-gunicorn==21.2.0
-Flask-Migrate==4.0.5
+* Admin should always log out before switching to user mode.
+* Avoid accessing user routes while logged in as admin to prevent session conflicts.
+
+### 2. Session Conflicts
+
+* If the admin accesses user routes without logging out, it may cause cart/order issues.
+
+### 3. Role-Based Access
+
+* Admins should only interact with `/dashboard` and related management routes.
+* Users should only interact with routes like `/cart`, `/checkout`, `/orders`, etc.
+
+---
+
+## 📦 Dependencies
+
+Ensure the following dependencies are installed:
+
+* **Alembic**: 1.16.5
+* **Blinker**: 1.9.0
+* **Click**: 8.2.1
+* **Colorama**: 3.1.1
+* **Dnspython**: 2.8.0
+* **Email-validator**: 2.3.0
+* **Gunicorn**: 23.0.0
+* **Idna**: 4.0.5
+* **Ttsdangerous**: 2.2.0
+* **Jinja2**: 3.1.6
+* **Flask**: 3.0.0
+* **Flask-Login**: 0.6.3
+* **Flask-WTF**: 1.2.1
+* **Flask-SQLAlchemy**: 3.1.1
+* **WTForms**: 3.1.1
+* **email-validator**: 2.0.0.post2
+* **Flask-Migrate**: 4.0.5
+
+---
+
+## 💡 Troubleshooting
+
+* If you encounter any issues related to session conflicts, double-check that you’ve logged out from admin before accessing user routes.
+* Make sure all dependencies are correctly installed using the `pip install -r requirements.txt` command.
+
+---
+
+Feel free to fork, clone, and customize this project as needed! Happy coding! 😄
+
