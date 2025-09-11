@@ -84,7 +84,6 @@ Admins should only use /dashboard and related management routes
 Users should only interact with /cart, /checkout, /orders, etc.
 
 📦 Dependencies
-txt
 Flask==3.0.0
 Flask-Login==0.6.3
 Flask-WTF==1.2.1
