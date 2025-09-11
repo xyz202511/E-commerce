@@ -43,7 +43,7 @@
 
                         <!-- Price -->
                         <div class="mb-3">
-                            <label class="form-label">Price ($)</label>
+                            <label class="form-label">Price (£)</label>
                             <input type="number" step="0.01" class="form-control" name="price" id="productPrice" required>
                         </div>
 
@@ -73,7 +73,7 @@
                 <th>Name</th>
                 <th>Description</th>
                 <th>Category</th>
-                <th>Price ($)</th>
+                <th>Price (£)</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -90,7 +90,7 @@
                 <td>{{ product.name }}</td>
                 <td>{{ product.description }}</td>
                 <td>{{ product.category }}</td>
-                <td>${{ "%.2f"|format(product.price) }}</td>
+                <td>£{{ "%.2f"|format(product.price) }}</td>
                 <td>
                     <!-- Edit Button -->
                     <button class="btn btn-warning btn-sm"
@@ -176,9 +176,9 @@ deleteModal.addEventListener('show.bs.modal', function (event) {
 // Delete Product
 async function deleteProduct() {
     if (!productToDelete) return;
-    const response = await fetch(`/ecommerce/delete/${productToDelete}`, { method: "DELETE" });
+    const response = await fetch(`/ecommerce/delete/£{productToDelete}`, { method: "DELETE" });
     if (response.ok) {
-        document.getElementById(`row-${productToDelete}`).remove();
+        document.getElementById(`row-£{productToDelete}`).remove();
         productToDelete = null;
         bootstrap.Modal.getInstance(deleteModal).hide();
     } else {
@@ -193,7 +193,7 @@ productForm.addEventListener("submit", async function (e) {
     const formData = new FormData(productForm);
     const productId = document.getElementById("productId").value;
 
-    let url = productId ? `/ecommerce/update/${productId}` : "/ecommerce/add";
+    let url = productId ? `/ecommerce/update/£{productId}` : "/ecommerce/add";
     let method = productId ? "PUT" : "POST";
 
     const response = await fetch(url, { method, body: formData });

@@ -19,7 +19,7 @@
             <div class="card-body">
               <h2 class="card-title text-success">{{ product.name }}</h2>
               <p class="card-text"><strong>Description:</strong> {{ product.description }}</p>
-              <p class="card-text"><strong>Price:</strong> ${{ product.price }}</p>
+              <p class="card-text"><strong>Price:</strong> £{{ product.price }}</p>
               <p class="card-text"><strong>Category:</strong> {{ product.category }}</p>
               <a href="{{ url_for('add_to_cart', product_id=product.id) }}" class="btn btn-success mt-3">Add to Cart</a>
             </div>

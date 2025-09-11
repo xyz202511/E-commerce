@@ -20,10 +20,10 @@
             <h5 class="card-title fw-semibold text-dark">{{ order.product_name }}</h5>
             <p class="card-text text-muted small">{{ order.product_description }}</p>
             <p class="card-text mb-2">
-              <span class="badge bg-success">${{ order.product_price }}</span>
+              <span class="badge bg-success">£{{ order.product_price }}</span>
               <span class="ms-2 text-secondary">x {{ order.quantity }}</span>
             </p>
-            <p class="card-text fw-bold text-dark">Total: ${{ order.product_price * order.quantity }}</p>
+            <p class="card-text fw-bold text-dark">Total: £{{ order.product_price * order.quantity }}</p>
           </div>
         </div>
         <div class="col-md-3 text-end pe-4">

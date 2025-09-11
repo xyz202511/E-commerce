@@ -17,10 +17,10 @@
           <h5 class="card-title text-primary fw-semibold">{{ item.product_name }}</h5>
           <p class="card-text text-muted small">{{ item.product_description }}</p>
           <p class="card-text mb-2">
-            <span class="badge bg-success">${{ item.product_price }}</span>
+            <span class="badge bg-success">£{{ item.product_price }}</span>
             <span class="ms-2 text-secondary">x {{ item.quantity }}</span>
           </p>
-          <p class="card-text fw-bold text-dark">Subtotal: ${{ item.quantity * item.product_price }}</p>
+          <p class="card-text fw-bold text-dark">Subtotal: £{{ item.quantity * item.product_price }}</p>
         </div>
       </div>
       <div class="col-md-3 text-end pe-4">
@@ -37,7 +37,7 @@
   {% endfor %}
 
   <div class="text-end mt-5">
-    <h4 class="fw-bold">Total: ${{ total_price }}</h4>
+    <h4 class="fw-bold">Total: £{{ total_price }}</h4>
     <a href="{{ url_for('checkout') }}" class="btn btn-primary btn-lg mt-3">
       <i class="fas fa-credit-card me-2"></i> Proceed to Checkout
     </a>
