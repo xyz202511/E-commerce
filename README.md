@@ -132,13 +132,22 @@ After logging in as a user, you can access features like:
 
 Ensure the following dependencies are installed:
 
+* **Alembic**: 1.16.5
+* **Blinker**: 1.9.0
+* **Click**: 8.2.1
+* **Colorama**: 3.1.1
+* **Dnspython**: 2.8.0
+* **Email-validator**: 2.3.0
+* **Gunicorn**: 23.0.0
+* **Idna**: 4.0.5
+* **Ttsdangerous**: 2.2.0
+* **Jinja2**: 3.1.6
 * **Flask**: 3.0.0
 * **Flask-Login**: 0.6.3
 * **Flask-WTF**: 1.2.1
 * **Flask-SQLAlchemy**: 3.1.1
 * **WTForms**: 3.1.1
 * **email-validator**: 2.0.0.post2
-* **gunicorn**: 21.2.0
 * **Flask-Migrate**: 4.0.5
 
 ---
