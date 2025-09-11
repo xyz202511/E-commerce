@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow rounded-4">
+        <div class="card-body p-4">
+          <h2 class="text-center mb-4 fw-bold text-primary">Login</h2>
+
+          <!-- Flash messages -->
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+
+          <form method="POST" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+              {{ form.email.label(class="form-label") }}
+              {{ form.email(class="form-control", placeholder="Enter your email") }}
+              {% if form.email.errors %}
+                <div class="text-danger small">{{ form.email.errors[0] }}</div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.password.label(class="form-label") }}
+              {{ form.password(class="form-control", placeholder="Enter your password") }}
+              {% if form.password.errors %}
+                <div class="text-danger small">{{ form.password.errors[0] }}</div>
+              {% endif %}
+            </div>
+
+            <div class="d-grid">
+              {{ form.submit(class_="btn btn-success btn-lg") }}
+            </div>
+          </form>
+
+          <p class="text-center mt-4">
+            Don't have an account?
+            <a href="{{ url_for('register') }}" class="text-decoration-none text-primary fw-semibold">Register here</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

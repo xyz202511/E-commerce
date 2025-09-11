@@ -1,0 +1,50 @@
+/* from app import create_app, db
+from app.models import Product
+
+app = create_app()
+app.app_context().push()
+
+products = [
+    Product(name="Eco Water Bottle", description="Reusable bottle made from bamboo fiber.", price=299.99, image="water_bottle.png", category="Eco-Friendly"),
+    Product(name="Bamboo Toothbrush", description="Sustainable toothbrush with soft bristles.", price=49.99, image="toothbrush.png", category="Personal Care"),
+    Product(name="Organic Cotton Tote", description="Stylish and reusable shopping bag.", price=149.99, image="cotton_tote.png", category="Accessories"),
+    Product(name="Solar Power Bank", description="Charge your devices with solar energy.", price=899.00, image="solar_bank.png", category="Electronics"),
+    Product(name="Recycled Notebook", description="Notebook made from 100% recycled paper.", price=79.00, image="notebook.png", category="Stationery"),
+    Product(name="Plant-Based Soap", description="Gentle soap with natural ingredients.", price=59.00, image="soap.png", category="Personal Care"),
+    Product(name="Wooden Sunglasses", description="Eco-chic sunglasses made from reclaimed wood.", price=499.00, image="sunglasses.png", category="Accessories"),
+    Product(name="Compost Bin", description="Compact bin for kitchen composting.", price=699.00, image="compost_bin.png", category="Home"),
+    Product(name="Reusable Straw Set", description="Stainless steel straws with cleaning brush.", price=129.00, image="straws.png", category="Kitchen"),
+    Product(name="Biodegradable Phone Case", description="Durable case made from plant-based materials.", price=349.00, image="phone_case.png", category="Electronics"),
+    Product(name="Herbal Shampoo Bar", description="Plastic-free shampoo with herbal extracts.", price=89.00, image="shampoo_bar.png", category="Personal Care"),
+    Product(name="LED Desk Lamp", description="Energy-efficient lamp with adjustable brightness.", price=599.00, image="desk_lamp.png", category="Home")
+]
+
+db.session.bulk_save_objects(products)
+db.session.commit()
+print("✅ 20 products inserted successfully.") */
+
+
+/* from app import create_app, db
+from app.models import Product
+
+app = create_app()
+app.app_context().push()
+
+# Delete all rows from the Product table
+Product.query.delete()
+db.session.commit()
+
+print("✅ All product data has been deleted.") */
+
+
+
+/* cart table drop 
+from app import create_app, db
+from app.models import Cart
+
+app = create_app()
+app.app_context().push()
+
+Cart.__table__.drop(db.engine)
+db.create_all()
+print("✅ Cart table recreated with updated fields.") */

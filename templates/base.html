@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}My Store{% endblock %}</title>
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Navbar styling */
+    .navbar {
+      background: linear-gradient(135deg, #43cea2, #185a9d);
+    }
+
+    .navbar-brand {
+      font-weight: bold;
+      font-size: 1.6rem;
+    }
+
+    main {
+      flex: 1;
+      padding-top: 80px;
+      /* avoid overlap with fixed navbar */
+    }
+
+    /* Flash animation */
+    .flash {
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Footer styling */
+    footer {
+      background-color: #212529;
+      color: #ccc;
+    }
+
+    footer a {
+      color: #aaa;
+      margin: 0 8px;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow-sm">
+    <div class="container-fluid px-4">
+      <!-- Logo -->
+      <img src="{{ url_for('static', filename='favicon.ico') }}" alt="favicon" class="img-fluid" style="width: 32px; height: 32px; margin-right: 5px;">
+
+      <a class="navbar-brand" href="{{ url_for('home') }}">My Store</a>
+
+      <!-- Mobile Toggle -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navbar Links -->
+      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+        <!-- Left Links -->
+        <!-- Inside the navbar collapse -->
+        <div class="mx-auto d-flex gap-5">
+          <a class="nav-link text-white fw-semibold" href="{{ url_for('home') }}">Home</a>
+
+
+          {% if current_user.is_authenticated %}
+          <!-- <p class="nav-link text-white fw-semibold">Logged in: {{ current_user.is_authenticated | string }}</p> -->
+          <a class="nav-link text-white fw-semibold" href="{{ url_for('cart') }}">Cart</a>
+          <a class="nav-link text-white fw-semibold" href="{{ url_for('orders') }}">My Orders</a>
+          {% endif %}
+        </div>
+
+        <!-- Right User Menu -->
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              <i class="fas fa-user-circle fa-lg"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              {% if current_user.is_authenticated %}
+              <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+              {% else %}
+              <li><a class="dropdown-item" href="{{ url_for('login') }}">Login</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('register') }}">Register</a></li>
+              {% endif %}
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main class="container my-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} flash" role="alert">
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center mt-auto py-3">
+    <div class="container">
+      <p class="mb-2">&copy; 2025 My Store. All rights reserved.</p>
+      <p>
+        <a href="#">Privacy Policy</a> |
+        <a href="#">Terms & Conditions</a> |
+        <a href="#">Contact Us</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
