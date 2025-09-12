@@ -454,4 +454,5 @@ def add_review(product_id):
 
 # ================================= RUN APP ====================================
 if __name__ == "__main__":
+    print("Starting Witress on http://localhost:5000")
     serve(app, host="0.0.0.0", port=5000)
