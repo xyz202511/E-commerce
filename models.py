@@ -11,8 +11,15 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+
+    # New optional fields
+    gender = db.Column(db.String(10))
+    age = db.Column(db.Integer)
+    mobile = db.Column(db.String(15))
+
     reviews = db.relationship('Review', back_populates='user', lazy=True)
-    
+
+
 # Product Model
 class Product(db.Model):
     __tablename__ = 'product'
@@ -24,7 +31,7 @@ class Product(db.Model):
     image = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(50), nullable=False)
 
-    reviews = db.relationship('Review', back_populates='product', lazy=True)  
+    reviews = db.relationship('Review', back_populates='product', lazy=True)
 
     def to_dict(self):
         return {
@@ -35,20 +42,22 @@ class Product(db.Model):
             "image": self.image,
             "category": self.category
         }
-    
+
+
 # Cart Table
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False) 
-    product_name = db.Column(db.String(100), nullable=False)  
-    product_image = db.Column(db.String(200), nullable=False)  
-    product_description = db.Column(db.Text, nullable=False)  
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    product_name = db.Column(db.String(100), nullable=False)
+    product_image = db.Column(db.String(200), nullable=False)
+    product_description = db.Column(db.Text, nullable=False)
     quantity = db.Column(db.Integer, default=1, nullable=False)
     added_at = db.Column(db.DateTime, default=datetime.utcnow)
     product_price = db.Column(db.Float, nullable=False)
 
-#order model
+
+# Order Model
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -59,6 +68,8 @@ class Order(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     ordered_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+
+# Review Model
 class Review(db.Model):
     __tablename__ = 'review'
 
@@ -84,6 +95,7 @@ class Review(db.Model):
             "created_at": self.created_at.strftime("%Y-%m-%d %H:%M:%S") if self.created_at else None
         }
 
+
 # Admin Model
 class Admin(UserMixin, db.Model):
     __tablename__ = "admin_user"
@@ -95,4 +107,3 @@ class Admin(UserMixin, db.Model):
     @property
     def is_admin(self):
         return True
-

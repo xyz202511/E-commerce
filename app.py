@@ -1,16 +1,21 @@
 from flask import Flask, request, jsonify, redirect, url_for, render_template, flash, abort
 from models import db, Product, User, Review, Admin, Cart, Order
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
+# from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
 from forms import RegisterForm, LoginForm
 from functools import wraps
 from flask import current_app
 from waitress import serve
+from forms import UpdateAccountForm
+from forms import ChangePasswordForm
+from werkzeug.security import check_password_hash, generate_password_hash
 # ================================= APP CONFIG =================================
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
+
+
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///products.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -421,6 +426,55 @@ def add_review(product_id):
 
 
 
+# user profile view
+@app.route('/account', methods=['GET', 'POST'])
+@login_required
+def account():
+    form = UpdateAccountForm(obj=current_user)  # Prefills form with user data
+
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        current_user.gender = form.gender.data
+        current_user.age = form.age.data
+        current_user.mobile = form.mobile.data
+        db.session.commit()
+        flash('Profile updated successfully!', 'success')
+        return redirect(url_for('account'))
+
+    return render_template('account.html', form=form)
+
+#user delete profile
+@app.route('/account/delete', methods=['POST'])
+@login_required
+def delete_account():
+    db.session.delete(current_user)
+    db.session.commit()
+    flash('Your account has been deleted.', 'success')
+    return redirect(url_for('home'))
+
+
+#change pass
+@app.route('/change-password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+
+    if form.validate_on_submit():
+        if not check_password_hash(current_user.password, form.current_password.data):
+            flash("Current password is incorrect.", "danger")
+            return redirect(url_for('change_password'))
+
+        if form.new_password.data != form.confirm_password.data:
+            flash("New passwords do not match.", "warning")
+            return redirect(url_for('change_password'))
+
+        current_user.password = generate_password_hash(form.new_password.data)
+        db.session.commit()
+        flash("Password updated successfully!", "success")
+        return redirect(url_for('account'))
+
+    return render_template('change_password.html', form=form)
 
 
 
