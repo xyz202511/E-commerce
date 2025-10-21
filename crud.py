@@ -4,12 +4,10 @@ from sqlalchemy import create_engine, text
 db_path = 'instance/products.db'
 engine = create_engine(f'sqlite:///{db_path}')
 
-# Connect and alter the table
+# Connect and delete all rows from the user table
 with engine.connect() as connection:
     try:
-        connection.execute(text('ALTER TABLE user ADD COLUMN gender VARCHAR(10)'))
-        connection.execute(text('ALTER TABLE user ADD COLUMN age INTEGER'))
-        connection.execute(text('ALTER TABLE user ADD COLUMN mobile VARCHAR(15)'))
-        print("✅ Columns added successfully to 'user' table!")
+        connection.execute(text('DELETE FROM user'))
+        print("✅ All user data deleted successfully!")
     except Exception as e:
         print("⚠️ Error:", e)
