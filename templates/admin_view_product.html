@@ -176,9 +176,9 @@ deleteModal.addEventListener('show.bs.modal', function (event) {
 // Delete Product
 async function deleteProduct() {
     if (!productToDelete) return;
-    const response = await fetch(`/ecommerce/delete/£{productToDelete}`, { method: "DELETE" });
+    const response = await fetch(`/ecommerce/delete/${productToDelete}`, { method: "DELETE" });
     if (response.ok) {
-        document.getElementById(`row-£{productToDelete}`).remove();
+        document.getElementById(`row-${productToDelete}`).remove();
         productToDelete = null;
         bootstrap.Modal.getInstance(deleteModal).hide();
     } else {
@@ -193,7 +193,7 @@ productForm.addEventListener("submit", async function (e) {
     const formData = new FormData(productForm);
     const productId = document.getElementById("productId").value;
 
-    let url = productId ? `/ecommerce/update/£{productId}` : "/ecommerce/add";
+    let url = productId ? `/ecommerce/update/${productId}` : "/ecommerce/add";
     let method = productId ? "PUT" : "POST";
 
     const response = await fetch(url, { method, body: formData });

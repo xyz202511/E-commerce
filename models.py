@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
     age = db.Column(db.Integer)
     mobile = db.Column(db.String(15))
 
-    reviews = db.relationship('Review', back_populates='user', lazy=True)
+    reviews = db.relationship('Review', back_populates='user', lazy=True, cascade='all, delete-orphan')
 
 
 # Product Model
@@ -31,7 +31,7 @@ class Product(db.Model):
     image = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(50), nullable=False)
 
-    reviews = db.relationship('Review', back_populates='product', lazy=True)
+    reviews = db.relationship('Review', back_populates='product', lazy=True, cascade='all, delete-orphan')
 
     def to_dict(self):
         return {

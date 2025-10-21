@@ -10,6 +10,8 @@ from flask import current_app
 from waitress import serve
 from forms import UpdateAccountForm
 from forms import ChangePasswordForm
+from flask import session
+
 from werkzeug.security import check_password_hash, generate_password_hash
 # ================================= APP CONFIG =================================
 app = Flask(__name__)
@@ -28,10 +30,19 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    admin = db.session.get(Admin, int(user_id))
-    if admin:
-        return admin
-    return db.session.get(User, int(user_id))
+    user_type = session.get('user_type')
+
+    if user_type == 'admin':
+        return db.session.get(Admin, int(user_id))
+    elif user_type == 'user':
+        return db.session.get(User, int(user_id))
+
+    # Fallback (optional): try both if session is missing or corrupted
+    user = db.session.get(User, int(user_id))
+    if user:
+        return user
+    return db.session.get(Admin, int(user_id))
+
 
 
 # Create tables + default admin
@@ -65,11 +76,19 @@ def home():
 @app.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
     if request.method == "POST":
-        user = Admin.query.filter_by(username=request.form.get("username")).first()
-        if user and check_password_hash(user.password, request.form.get("password")):
-            login_user(user)
-            return redirect(url_for("dashboard"))
-        flash("Invalid credentials", "danger")
+        username = request.form.get("username").strip()
+        password = request.form.get("password")
+
+        admin = Admin.query.filter_by(username=username).first()
+
+        if admin and check_password_hash(admin.password, password):
+            login_user(admin)
+            session['user_type'] = 'admin'  # ✅ Track admin type
+            flash("Admin logged in successfully!", "success")
+            return redirect(url_for("dashboard"))  # or admin_dashboard
+        else:
+            flash("Invalid credentials", "danger")
+
     return render_template("admin_login.html")
 
 @app.route("/admin_logout")
@@ -198,7 +217,7 @@ def update_product(product_id):
     return jsonify(product.to_dict())
 
 
-@app.route("/ecommerce/delete/<int:product_id>", methods=["DELETE"])
+@app.route("/ecommerce/delete/<int:product_id>", methods=["DELETE", "POST"])
 @admin_required
 def delete_product(product_id):
     product = Product.query.get_or_404(product_id)
@@ -206,10 +225,46 @@ def delete_product(product_id):
     try:
         db.session.delete(product)
         db.session.commit()
+        app.logger.info(f"Successfully deleted product: {product.name} with ID {product.id}")
         return jsonify({"message": f"Product '{product.name}' deleted successfully"})
+
     except Exception as e:
         db.session.rollback()
+        error_message = f"Error deleting product ID {product.id}: {str(e)}\n{traceback.format_exc()}"
+        app.logger.error(error_message)  # Logs to app's log file and console
+        print(error_message)  # Also prints to console for quick feedback
         return jsonify({"error": "Failed to delete product"}), 500
+    
+# shows all the user to the admin in a table format in tht frontend
+@app.route('/admin/users')
+@admin_required
+def admin_users():
+    users = User.query.all()  # Fetch all users from database
+    return render_template('admin_users.html', users=users)
+
+# delete request for admins to delete the user 
+@app.route('/admin/delete_user/<int:user_id>', methods=['DELETE'])
+@admin_required
+def delete_user(user_id):
+    user = User.query.get(user_id)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({'success': True})
+    return jsonify({'success': False}), 404
+
+# update request for admins to update the user details
+@app.route('/admin/update_user/<int:user_id>', methods=['POST'])
+@admin_required
+def update_user(user_id):
+    data = request.get_json()
+    user = User.query.get(user_id)
+    if user:
+        user.username = data.get('username', user.username)
+        user.email = data.get('email', user.email)
+        db.session.commit()
+        return jsonify({'success': True})
+    return jsonify({'success': False}), 404
 
 # ---------- REVIEW API ----------
 @app.route("/ecommerce/reviews")
@@ -287,6 +342,7 @@ def login():
         # Validate credentials
         if user and check_password_hash(user.password, password):
             login_user(user)
+            session['user_type'] = 'user'
             flash('Logged in successfully!', 'success')
             app.logger.info(f"User {user.username} logged in.")
             return redirect(url_for('home'))
@@ -346,8 +402,17 @@ def add_to_cart(product_id):
 @login_required
 def cart():
     cart_items = Cart.query.filter_by(user_id=current_user.id).all()
-    total_price = sum(item.quantity * Product.query.get(item.product_id).price for item in cart_items)
+    total_price = 0
+
+    for item in cart_items:
+        product = Product.query.get(item.product_id)
+        if product:
+            total_price += item.quantity * product.price
+        else:
+            app.logger.warning(f"Missing product_id {item.product_id} in cart")
+
     return render_template('cart.html', cart_items=cart_items, total_price=total_price)
+
 
 #suupporting routes
 @app.route('/update-cart/<int:cart_id>', methods=['POST'])
@@ -430,7 +495,11 @@ def add_review(product_id):
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
-    form = UpdateAccountForm(obj=current_user)  # Prefills form with user data
+    if not isinstance(current_user, User):
+        flash("Only regular users can access the profile page.", "warning")
+        return redirect(url_for('home'))  # or admin dashboard
+
+    form = UpdateAccountForm(obj=current_user)
 
     if form.validate_on_submit():
         current_user.username = form.username.data
@@ -443,6 +512,7 @@ def account():
         return redirect(url_for('account'))
 
     return render_template('account.html', form=form)
+
 
 #user delete profile
 @app.route('/account/delete', methods=['POST'])
